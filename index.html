@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <title> JS Formvalidator </title>
+	<style type="text/css">
+		span, 
+		label, 
+		input, 
+		select, 
+		textarea{
+			display: block;
+		}
+		input.radio,
+		input.checkbox{
+			display: inline;
+		}
+		.error{
+			color: red;
+		}
+		input.error{
+			border: 1px solid red;
+		}
+		.success{
+			color: green;
+		}
+		input.success{
+			border: 1px solid green;
+		}
+		dt .error-msg{
+			display:inline-block;
+		}
+		.error-msg{
+			margin-left: 10px;
+			font-size: 90%;
+		}
+	</style>
+  </head>
+  <body>
+    <div id="content">
+		
+		<form action="#" id="form">
+			<fieldset>
+				<legend>A Form</legend>
+				<dl>
+					<dt><label for="name">Name</label></dt>
+					<dd><input type="text" name="nachname" id="name"  class="req" /></dd>
+					<dt><label for="email">Email</label></dt>
+					<dd><input type="text" name="email" id="email" class="email" /></dd>
+					<dt><label for="url">URL</label></dt>
+					<dd><input type="text" name="url" id="url" class="url" /></dd>
+					<dt>Choose</dt>
+					<dd>
+						<label><input type="radio" name="choose" class="radio req" value="A">A</label>
+						<label><input type="radio" name="choose" class="radio req" value="B">B</label>
+						<label><input type="radio" name="choose" class="radio req" value="C">C</label>
+						<label><input type="radio" name="choose" class="radio req" value="D">D</label>
+					</dd>
+					<dt>Check</dt>
+					<dd>
+						<label><input type="checkbox" name="check" class="checkbox req" value="A">A</label>
+						<label><input type="checkbox" name="check" class="checkbox req" value="B">B</label>
+						<label><input type="checkbox" name="check" class="checkbox req" value="C">C</label>
+						<label><input type="checkbox" name="check" class="checkbox req" value="D">D</label>
+					</dd>
+				</dl>
+
+				<label>
+					Number
+					<input type="text" name="number" class="number"/>
+				</label>
+
+				<label>
+					Select
+					<select name="select" class="req">
+						<option value="">Bitte wählen</option>
+						<option value="A">A</option>
+						<option value="B">B</option>
+					</select> 
+				</label>
+				<label>
+					Textarea
+					<textarea name="textarea" class="req"></textarea> 
+				</label>
+				<label>
+					PLZ
+					<input type="text" name="plz" class="req plz_de"/> 
+				</label>
+			</fieldset>
+			<input type="submit"/>
+		</form>
+		
+      </div>
+    </div>
+    <script type="text/javascript" src="./js/dLite-1.0.js"></script>
+    <script type="text/javascript" src="./js/validator.js"></script>
+	<script type="text/javascript">
+//		validate.data_model.number = { 
+//			msg : "Please provide a number",
+//			pattern : /^[0-9]*$/
+//		};
+		validate.extend({
+			number : {
+				msg : "(Please provide a number)"
+			},
+			plz_de : {
+				sanitary : /[0-9]*/,
+				pattern : /^[0-9]{5}$/
+			},
+			url : {
+				pattern : /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+			},
+			email : {
+				pattern : /[a-z0-9\-_]?[a-z0-9.\-_]+[a-z0-9\-_]?@[a-z.-]+\.[a-z]{2,}/,
+				msg : "(Please provide a valid email adress)"
+			},
+			req : {
+//				msg : "(Please provide this value)"
+			}
+		});
+		
+		
+		validate.options.onError = function(){
+			alert("Aha!");
+		}
+		validate.options.onSuccess = function(form){
+			alert("Richtig!");
+//			form.submit();
+		}
+		
+		addEvent(window,"load",function(){
+				validate.init(document.getElementById("form"));
+		});
+		
+
+	</script>
+  </body>
+</html>
