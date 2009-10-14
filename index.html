@@ -88,8 +88,20 @@
 			</fieldset>
 			<input type="submit"/>
 		</form>
+
+		<form action="#">
+			<fieldset>
+				<legend>A Form without validation</legend>
+				<label>
+					Search
+					<input type="text" name="search" class="" /> 
+				</label>
+			</fieldset>
+			<input type="submit"/>
+		</form>
+
 		
-      </div>
+		</div>
     </div>
     <script type="text/javascript" src="./js/dLite-1.0.js"></script>
     <script type="text/javascript" src="./js/validator.js"></script>
@@ -120,18 +132,18 @@
 		
 		
 		validate.options.onError = function(){
-			alert("Aha!");
+			alert("Fail!");
 		}
 		validate.options.onSuccess = function(form){
-			alert("Richtig!");
-//			form.submit();
+			alert("Correct!");
+			form.submit();
 		}
 		
+		//initiate form validator
 		addEvent(window,"load",function(){
-				validate.init(document.getElementById("form"));
+				validate.init();
 		});
-		
-
+	
 	</script>
   </body>
 </html>

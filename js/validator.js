@@ -33,28 +33,32 @@ validate = {
 			}
 		}
 	},
-	init : function(obj){
-		if(obj.tagName.toLowerCase() == "form"){
-			addEvent(obj, 'submit', function(evt){
-				stopDefault(evt);
+	init : function(){
+		forms = document.getElementsByTagName("form");
+		for(n=0; n < forms.length; n++){
+			addEvent(forms[n], 'submit', function(evt){
+				stopDefault(evt); //prevent form submit
 				
 				return_val = true;
 				
-				fields = obj.getElementsByTagName("input");
-				for(f=0; fields.length > f; f++){
-					if(fields[f].type !== undefined){
-						return_val = validate.evaluate(fields[f]) && return_val;
+				//validate inputs
+				inputs = this.getElementsByTagName("input");
+				for(f=0; inputs.length > f; f++){
+					if(inputs[f].type !== undefined){
+						return_val = validate.evaluate(inputs[f]) && return_val;
 					}
 				}
 				
-				selects = obj.getElementsByTagName("select");
+				//validate selects
+				selects = this.getElementsByTagName("select");
 				for(f=0; selects.length > f; f++){
 					if(selects[f].type !== undefined){
 						return_val = validate.evaluate(selects[f]) && return_val;
 					}
 				}
 				
-				textareas = obj.getElementsByTagName("textarea");
+				//validate textareas
+				textareas = this.getElementsByTagName("textarea");
 				for(f=0; textareas.length > f; f++){
 					if(textareas[f].type !== undefined){
 						return_val = validate.evaluate(textareas[f]) && return_val;
