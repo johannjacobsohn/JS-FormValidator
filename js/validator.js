@@ -6,12 +6,12 @@
  */
 validate = {
 	options : {
-		onError : function(){
-			alert("error");
-		},
+		onError : function(){ },
 		onSuccess : function(form){
 			form.submit();
-		}		 
+		},
+		errorClass : "error",
+		successClass : "success"
 	},
 	data_model : {
 		email : {
@@ -97,13 +97,13 @@ validate = {
 		}
 		
 		if(type=="success"){
-			removeClass(el, "error");
-			removeClass(label, "error");
+			removeClass(el, this.options.errorClass);
+			removeClass(label, this.options.errorClass);
 
 			//only not-empty values can be "correct"
 			if(el.value != ""){
-				addClass(el, "success");
-				addClass(label, "success");
+				addClass(el, this.options.successClass);
+				addClass(label, this.options.successClass);
 			}
 			
 			//Remove Errormessage
@@ -112,11 +112,11 @@ validate = {
 				errorlabel.parentNode.removeChild(errorlabel);
 			}
 		} else if(type=="error") {
-			removeClass(el, "success");
-			addClass(el, "error");
+			removeClass(el, this.options.successClass);
+			addClass(el, this.options.errorClass);
 			
-			removeClass(label, "success");
-			addClass(label, "error");
+			removeClass(label, this.options.successClass);
+			addClass(label, this.options.errorClass);
 			
 			//Add Errormessage
 			if(msg && !document.getElementById(el.name + "-error")){
