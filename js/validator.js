@@ -19,7 +19,7 @@ validate = {
 	},
 	data_model : {
 		email : {
-			pattern : /[a-z0-9\-_]?[a-z0-9.\-_]+[a-z0-9\-_]?@[a-z.-]+\.[a-z]{2,}/,
+			pattern : /[a-z0-9\-_]?[a-z0-9.\-_]+[a-z0-9\-_]?@[a-z.-]+\.[a-z]{2,}/
 		},
 		url : {
 			pattern : /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
@@ -73,8 +73,7 @@ validate = {
 					}
 				}
 
-				if(isValid){	validate.options.onSuccess(this); }
-				else{ validate.options.onError(this); }
+				isValid ? validate.options.onSuccess(this) : validate.options.onError(this); 
 			});
 		}
 	},
