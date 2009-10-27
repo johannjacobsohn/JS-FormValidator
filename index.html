@@ -14,26 +14,8 @@
 		input.checkbox{
 			display: inline;
 		}
-		.error{
-			color: red;
-		}
-		input.error{
-			border: 1px solid red;
-		}
-		.success{
-			color: green;
-		}
-		input.success{
-			border: 1px solid green;
-		}
-		dt .error-msg{
-			display:inline-block;
-		}
-		.error-msg{
-			margin-left: 10px;
-			font-size: 90%;
-		}
 	</style>
+	<link href="css/validate.css" type="text/css" rel="stylesheet">
   </head>
   <body>
     <div id="content">
@@ -43,7 +25,7 @@
 				<legend>A Form</legend>
 				<dl>
 					<dt><label for="name">Name</label></dt>
-					<dd><input type="text" name="nachname" id="name"  class="req" /></dd>
+					<dd><input type="text" name="nachname" id="name" title="Your Name" class="req" /></dd>
 					<dt><label for="email">Email</label></dt>
 					<dd><input type="text" name="email" id="email" class="email" /></dd>
 					<dt><label for="url">URL</label></dt>
@@ -66,7 +48,7 @@
 
 				<label>
 					Number
-					<input type="text" name="number" class="number"/>
+					<input type="text" name="number" class="number" title="please enter a number"/>
 				</label>
 
 				<label>
@@ -106,43 +88,25 @@
     <script type="text/javascript" src="./js/dLite-1.0.js"></script>
     <script type="text/javascript" src="./js/validator.js"></script>
 	<script type="text/javascript">
-//		validate.data_model.number = { 
-//			msg : "Please provide a number",
-//			pattern : /^[0-9]*$/
-//		};
 		validate.extend({
 			number : {
-				msg : "(Please provide a number)"
+				msg : "Please provide a number"
 			},
 			plz_de : {
 				sanitary : /[0-9]*/,
 				pattern : /^[0-9]{5}$/
 			},
-			url : {
-				pattern : /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
-			},
 			email : {
-				pattern : /[a-z0-9\-_]?[a-z0-9.\-_]+[a-z0-9\-_]?@[a-z.-]+\.[a-z]{2,}/,
-				msg : "(Please provide a valid email adress)"
-			},
-			req : {
-//				msg : "(Please provide this value)"
+				msg : "Please provide a valid email adress"
 			}
 		});
 		
-		
-		validate.options.onError = function(){
-			alert("Fail!");
-		}
 		validate.options.onSuccess = function(form){
 			alert("Correct!");
-			form.submit();
+//			form.submit();
 		}
 		
-		//initiate form validator
-		addEvent(window,"load",function(){
-				validate.init();
-		});
+
 	
 	</script>
   </body>

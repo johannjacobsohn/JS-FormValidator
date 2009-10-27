@@ -1,0 +1,25 @@
+
+input{
+	padding-right: 16px;
+}
+.error{
+	color: red;
+}
+input.error{
+	border: 1px solid red;
+	background: url(../img/cross.png) no-repeat right center;
+}
+.success{
+	color: green;
+}
+input.success{
+	border: 1px solid green;
+	background: url(../img/accept.png) no-repeat right center;
+}
+dt .error-msg{
+	display:inline-block;
+}
+.error-msg{
+	margin-left: 10px;
+	font-size: 90%;
+}
