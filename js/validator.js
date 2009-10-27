@@ -7,7 +7,7 @@
 validate = {
 	options : {
 		onError : function(form, faulty){
-			if(document.getElementById("errorList")) document.getElementById("errorList").parentNode.removeChild(document.getElementById("errorList"));
+			if(document.getElementById("errorList")){ document.getElementById("errorList").parentNode.removeChild(document.getElementById("errorList"));}
 			form.insertBefore(validate.formatErrorList(), form.childNodes[0]);
 		},
 		onSuccess : function(form){
@@ -20,7 +20,6 @@ validate = {
 	data_model : {
 		email : {
 			pattern : /[a-z0-9\-_]?[a-z0-9.\-_]+[a-z0-9\-_]?@[a-z.-]+\.[a-z]{2,}/,
-			msg : "hey"
 		},
 		url : {
 			pattern : /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
@@ -243,7 +242,7 @@ validate = {
 		
 		return return_value;
 	}
-}
+};
 
 //initiate form validator
 addEvent(window,"load",function(){
