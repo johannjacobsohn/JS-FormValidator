@@ -6,16 +6,24 @@
  */
 validate = {
 	options : {
-		onError : function(){ },
+		onError : function(form, faulty){
+			if(document.getElementById("errorList")) document.getElementById("errorList").parentNode.removeChild(document.getElementById("errorList"));
+			form.insertBefore(validate.formatErrorList(), form.childNodes[0]);
+		},
 		onSuccess : function(form){
 			form.submit();
 		},
-		errorClass : "error",
-		successClass : "success"
+		errorClass 		: "error",
+		successClass 	: "success",
+		defaultMsg 		: "There was an error."
 	},
 	data_model : {
 		email : {
-			pattern : /.+@.+\..+/
+			pattern : /[a-z0-9\-_]?[a-z0-9.\-_]+[a-z0-9\-_]?@[a-z.-]+\.[a-z]{2,}/,
+			msg : "hey"
+		},
+		url : {
+			pattern : /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
 		},
 		req : {
 			required : true
@@ -25,6 +33,7 @@ validate = {
 			pattern : /^[0-9]*$/
 		}
 	},
+	faulty : [],
 	extend : function(new_data){
 		for ( var rule in new_data ) {
 			for ( var name in new_data[ rule ] ) {
@@ -37,15 +46,15 @@ validate = {
 		forms = document.getElementsByTagName("form");
 		for(n=0; n < forms.length; n++){
 			addEvent(forms[n], 'submit', function(evt){
+				validate.faulty = []; //reset faulty array
 				stopDefault(evt); //prevent form submit
-				
-				return_val = true;
+				isValid = true;
 				
 				//validate inputs
 				inputs = this.getElementsByTagName("input");
 				for(f=0; inputs.length > f; f++){
 					if(inputs[f].type !== undefined){
-						return_val = validate.evaluate(inputs[f]) && return_val;
+						isValid = validate.evaluate(inputs[f]) && isValid;
 					}
 				}
 				
@@ -53,7 +62,7 @@ validate = {
 				selects = this.getElementsByTagName("select");
 				for(f=0; selects.length > f; f++){
 					if(selects[f].type !== undefined){
-						return_val = validate.evaluate(selects[f]) && return_val;
+						isValid = validate.evaluate(selects[f]) && isValid;
 					}
 				}
 				
@@ -61,14 +70,37 @@ validate = {
 				textareas = this.getElementsByTagName("textarea");
 				for(f=0; textareas.length > f; f++){
 					if(textareas[f].type !== undefined){
-						return_val = validate.evaluate(textareas[f]) && return_val;
+						isValid = validate.evaluate(textareas[f]) && isValid;
 					}
 				}
 
-				if(return_val){	validate.options.onSuccess(this); }
-				else{ validate.options.onError(); }
+				if(isValid){	validate.options.onSuccess(this); }
+				else{ validate.options.onError(this); }
 			});
 		}
+	},
+	formatErrorList : function(){
+	
+		ul = document.createElement("ul");
+		ul.setAttribute("id", "errorList");
+		for(i=0; i < this.faulty.length; i++){
+			li = document.createElement("li");
+			a = document.createElement("a");
+			a.setAttribute("href", "#" + this.faulty[i].id);
+			
+			if(document.getElementById(this.faulty[i].id).title){
+				errorStr = document.getElementById(this.faulty[i].id).title;
+			} else if(this.data_model[this.faulty[i].errorClass] && this.data_model[this.faulty[i].errorClass].msg) {
+				errorStr = this.data_model[this.faulty[i].errorClass].msg;
+			} else {
+				errorStr = this.options.defaultMsg;
+			}
+			a.appendChild(document.createTextNode(errorStr));
+			li.appendChild(a);
+			ul.appendChild(li);
+		}
+		return ul;
+		
 	},
 	view : function(el, type, msg){
 		var label;
@@ -130,7 +162,6 @@ validate = {
 	},
 	evaluate : function(el){
 		return_value = true;
-		var faulty = [];
 		
 		if(el.tagName.toLowerCase() == "select"){
 			el.onchange = function(evt){ validate.evaluate(this); };
@@ -142,11 +173,14 @@ validate = {
 			el.onkeyup = function(evt){ validate.evaluate(this); };
 		}
 	
+		el.id = el.id ? el.id : el.name + "-" + Math.round(Math.random() * 1000);
+		
 		var classes = new Array;
 		classes = el.className.split(" ");
 		for(j=0;j<classes.length && return_value;j++){
 		
 			if(/[\w]+/.test(classes[j]) && this.data_model[classes[j]]){
+
 				//clean input
 				if(!(!this.data_model[classes[j]].sanitary)){ 
 					el.value = this.data_model[classes[j]].sanitary.exec(el.value)
@@ -154,13 +188,21 @@ validate = {
 				
 				//check if required
 				if(!(!this.data_model[classes[j]].required) && !/[\w]+/.test(el.value)){ 
-					faulty.push(el.id ? el.id : el.name);
+					this.faulty.push({
+						id : el.id,
+						type : "req",
+						errorClass : classes[j]
+					});					
 					return_value = false;
 				}
 
 				//check pattern
 				if(!(!this.data_model[classes[j]].pattern) && !this.data_model[classes[j]].pattern.test(el.value)){
-					faulty.push(el.id ? el.id : el.name);		
+					this.faulty.push({
+						id : el.id,
+						type : "pattern",
+						errorClass : classes[j]
+					});		
 					return_value = false;
 				}
 				
@@ -179,8 +221,11 @@ validate = {
 						}
 					}
 					if(!checked){
-						if(!el.id) el.id = el.name + "-" + Math.round((Math.random() * 1000));
-						faulty.push(el.id);
+						this.faulty.push({
+							id : el.id,
+							type : "checked",
+							errorClass : classes[j]
+						});		
 						return_value = false;
 					}
 				}
@@ -196,9 +241,11 @@ validate = {
 			}
 		}
 		
-//		console.log(faulty);
-		
 		return return_value;
 	}
 }
 
+//initiate form validator
+addEvent(window,"load",function(){
+	validate.init();
+});
