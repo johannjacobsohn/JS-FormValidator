@@ -195,7 +195,7 @@ validate = {
 				}
 
 				//check pattern
-				if(!(!this.data_model[classes[j]].pattern) && !this.data_model[classes[j]].pattern.test(el.value)){
+				if(!(!this.data_model[classes[j]].pattern) && !this.data_model[classes[j]].pattern.test(el.value) && el.value != ""){
 					this.faulty.push({
 						id : el.id,
 						type : "pattern",
